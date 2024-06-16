@@ -18,12 +18,12 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ limit: '30mb', extended: true }));
 app.use(cors());
 
-// application routes
-app.use('/api/v1', router);
-
 app.get('/', (req, res) => {
   res.send('Hello from classic server version 2');
 });
+
+// application routes
+app.use('/api/v1', router);
 
 app.use(globalErrorHandler);
 
