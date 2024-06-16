@@ -52,7 +52,7 @@ const deleteBrandFromDB = async (id: string) => {
 };
 
 const getAllBrandsFromDB = async (query: Record<string, unknown>) => {
-  const brandQuery = new QueryBuilder(Brand.find(), query)
+  const brandQuery = new QueryBuilder(Brand.find({ isDeleted: false }), query)
     .search(BrandSearchableFields)
     .filter()
     .sort()

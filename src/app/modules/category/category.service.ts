@@ -64,7 +64,12 @@ const deleteCategoryFromDB = async (id: string) => {
 };
 
 const getAllCategorysFromDB = async (query: Record<string, unknown>) => {
-  const CategoryQuery = new QueryBuilder(Category.find(), query)
+  const CategoryQuery = new QueryBuilder(
+    Category.find({
+      isDeleted: false,
+    }),
+    query,
+  )
     .search(CategorySearchableFields)
     .filter()
     .sort()

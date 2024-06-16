@@ -27,7 +27,7 @@ const getSingleBrand = catchAsync(async (req, res) => {
 
 const updateBrand = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const { brand } = req.body;
+  const brand = req.body;
   const result = await BrandServices.updateBrandIntoDB(id, brand);
 
   sendResponse(res, {

@@ -1,22 +1,22 @@
 import { z } from 'zod';
 
 const createImageValidationSchema = z.object({
-  fieldName: z.string(),
-  originalName: z.string(),
-  encoding: z.string(),
-  mimeType: z.string(),
-  imageUrl: z.string().url(),
-  size: z.number(),
-  destination: z.string(),
-  filename: z.string(),
-  path: z.string(),
-  folder: z.string(),
+  fieldName: z.string().optional(),
+  originalName: z.string().optional(),
+  encoding: z.string().optional(),
+  mimeType: z.string().optional(),
+  imageUrl: z.string().optional(),
+  size: z.number().optional(),
+  destination: z.string().optional(),
+  filename: z.string().optional(),
+  path: z.string().optional(),
+  folder: z.string().optional(),
 });
 
 const createProductValidationSchema = z.object({
   body: z.object({
     title: z.string().min(1),
-    code: z.string().min(1),
+    code: z.string().optional(),
     unit: z.string().default('pcs'),
     description: z.string().optional(),
     category: z.string().min(1), // Assuming category is an ObjectId in string format
@@ -36,18 +36,16 @@ const updateImageValidationSchema = z.object({
   originalName: z.string().optional(),
   encoding: z.string().optional(),
   mimeType: z.string().optional(),
-  imageUrl: z.string().url().optional(),
+  imageUrl: z.string().optional(),
   size: z.number().optional(),
   destination: z.string().optional(),
   filename: z.string().optional(),
-  path: z.string().optional(),
-  folder: z.string().optional(),
 });
 
 const updateProductValidationSchema = z.object({
   body: z.object({
     title: z.string().min(1).optional(),
-    code: z.string().min(1).optional(),
+    code: z.string().optional(),
     unit: z.string().optional(),
     description: z.string().optional(),
     category: z.string().min(1).optional(), // Assuming category is an ObjectId in string format

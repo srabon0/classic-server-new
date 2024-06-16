@@ -27,7 +27,7 @@ const getSingleCategory = catchAsync(async (req, res) => {
 
 const updateCategory = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const { category } = req.body;
+  const category = req.body;
   const result = await CategoryServices.updateCategoryIntoDB(id, category);
 
   sendResponse(res, {
