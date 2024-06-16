@@ -19,7 +19,9 @@ app.use(bodyParser.urlencoded({ limit: '30mb', extended: true }));
 app.use(cors());
 
 app.get('/', (req, res) => {
-  res.send('<h1> Welcome to the API </h1>');
+  res.send(
+    '<h1> Welcome to the API for the classic luxuryy api new config </h1>',
+  );
 });
 
 // application routes
