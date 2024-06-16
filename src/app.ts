@@ -19,7 +19,7 @@ app.use(bodyParser.urlencoded({ limit: '30mb', extended: true }));
 app.use(cors());
 
 app.get('/', (req, res) => {
-  res.send('Hello from classic server version 2');
+  res.send('<h1> Welcome to the API </h1>');
 });
 
 // application routes
