@@ -25,4 +25,6 @@ router.post(
   ProductControllers.createProduct,
 );
 
+router.post('/delete-image/:productId', ProductControllers.deleteImage);
+
 export const ProductRoutes = router;

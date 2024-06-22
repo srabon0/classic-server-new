@@ -26,7 +26,7 @@ const storage = multer.diskStorage({
     const extension = path.extname(file.originalname);
 
     if (req.folderName) {
-      file.imageUrl = `images/${req.folderName}/${uniqueSuffix + extension}`;
+      file.imageUrl = `files/${req.folderName}/${uniqueSuffix + extension}`;
     }
     cb(null, uniqueSuffix + extension);
   },

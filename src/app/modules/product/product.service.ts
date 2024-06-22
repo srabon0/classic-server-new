@@ -1,4 +1,7 @@
+import httpStatus from 'http-status';
 import QueryBuilder from '../../builder/QueryBuilder';
+import AppError from '../../errors/AppError';
+import { UploadController } from '../file/file.controller';
 import { productSearchableFields } from './product.constant';
 import { TProduct } from './product.interface';
 import { Product } from './product.model';
@@ -119,9 +122,7 @@ const getAllProductsFromDb = async (query: Record<string, unknown>) => {
 };
 
 const getSingleProductFromDB = async (id: string) => {
-  const result = await Product.findById(id)
-    .populate('brand')
-    .populate('category');
+  const result = await Product.findById(id);
   return result;
 };
 
@@ -208,11 +209,40 @@ const updateProductIntoDB = async (id: string, payload: Partial<TProduct>) => {
 
 const deleteProductFromDB = async (id: string) => {
   const result = await Product.findByIdAndDelete(id);
+  if (!result) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Product not found');
+  }
+  if (result?.image?.length) {
+    UploadController.deleteFolder(result?.image[0]?.folder as string);
+  }
+
   return result;
 };
 
 const createProductIntoDB = async (payload: TProduct) => {
   const result = await Product.create(payload);
+  return result;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const deleteImageFromDB = async (productId: string, image: any) => {
+  const imageIdToRemove = image._id;
+  const result = await Product.findByIdAndUpdate(
+    productId,
+    { $pull: { image: { _id: imageIdToRemove } } },
+    { new: true },
+  );
+  //remove file from disk
+
+  if (!result) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Product not found');
+  }
+
+  const fileDeleted = await UploadController.deleteImage(image);
+  if (!fileDeleted) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'Image not deleted');
+  }
+
   return result;
 };
 
@@ -222,4 +252,5 @@ export const ProductServices = {
   updateProductIntoDB,
   deleteProductFromDB,
   createProductIntoDB,
+  deleteImageFromDB,
 };

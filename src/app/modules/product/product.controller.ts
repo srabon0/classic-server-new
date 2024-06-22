@@ -2,6 +2,7 @@ import { RequestHandler } from 'express';
 import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
+import { Product } from './product.model';
 import { ProductServices } from './product.service';
 
 const getSingleProduct = catchAsync(async (req, res) => {
@@ -18,18 +19,28 @@ const getSingleProduct = catchAsync(async (req, res) => {
 
 const getAllProducts: RequestHandler = catchAsync(async (req, res) => {
   const result = await ProductServices.getAllProductsFromDb(req.query);
+  const totalCounts = await Product.countDocuments();
+  const meta = {
+    totalCounts: totalCounts || 0,
+    totalPages: Math.ceil(totalCounts / Number(req?.query?.limit)) || 1,
+    page: Number(req.query.page || 1),
+    limit: Number(req.query.limit || 10),
+  };
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Product are retrieved succesfully',
-    data: result,
+    data: {
+      data: result,
+      meta,
+    },
   });
 });
 
 const updateProduct = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const { product } = req.body;
+  const product = req.body;
   const result = await ProductServices.updateProductIntoDB(id, product);
 
   sendResponse(res, {
@@ -64,10 +75,23 @@ const createProduct = catchAsync(async (req, res) => {
   });
 });
 
+const deleteImage = catchAsync(async (req, res) => {
+  const { productId } = req.params;
+  const result = await ProductServices.deleteImageFromDB(productId, req.body);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Image is deleted succesfully',
+    data: result,
+  });
+});
+
 export const ProductControllers = {
   getSingleProduct,
   getAllProducts,
   updateProduct,
   deleteProduct,
   createProduct,
+  deleteImage,
 };
