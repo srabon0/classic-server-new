@@ -28,6 +28,7 @@ const createProductValidationSchema = z.object({
     price: z.number().optional(),
     tags: z.array(z.string()).optional(),
     status: z.enum(['active', 'inactive', 'deleted']).default('active'),
+    isSliderProduct: z.boolean().default(false).optional(),
   }),
 });
 
@@ -57,6 +58,7 @@ const updateProductValidationSchema = z.object({
     price: z.number().optional(),
     tags: z.array(z.string()).optional(),
     status: z.enum(['active', 'inactive', 'deleted']).optional(),
+    isSliderProduct: z.boolean().optional(),
   }),
 });
 

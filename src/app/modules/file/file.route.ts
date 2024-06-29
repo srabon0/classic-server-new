@@ -21,7 +21,6 @@ router.post(
   UploadController.uploadImageInSpecificFolder,
 );
 
-router.delete('/:folder/:filename', UploadController.deleteImage);
 
 router.get('/:folder/:filename', UploadController.getImage);
 

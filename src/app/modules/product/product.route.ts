@@ -11,6 +11,8 @@ router.get('/', ProductControllers.getAllProducts);
 
 router.get('/:id', ProductControllers.getSingleProduct);
 
+router.post('/search', ProductControllers.searchProduct);
+
 router.patch(
   '/:id',
   validateRequest(productValidations.updateProductValidationSchema),
@@ -26,5 +28,7 @@ router.post(
 );
 
 router.post('/delete-image/:productId', ProductControllers.deleteImage);
+router.post('/latest', ProductControllers.getLatestProducts);
+router.post('/slider', ProductControllers.getSliderProducts);
 
 export const ProductRoutes = router;

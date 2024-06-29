@@ -87,6 +87,38 @@ const deleteImage = catchAsync(async (req, res) => {
   });
 });
 
+const searchProduct = catchAsync(async (req, res) => {
+  const result = await ProductServices.searchProductFromDB({
+    searchKey: req?.body?.search,
+  });
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Product is retrieved succesfully',
+    data: result,
+  });
+});
+
+const getLatestProducts = catchAsync(async (req, res) => {
+  const result = await ProductServices.getLatestProductsFromDB();
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Product is retrieved succesfully',
+    data: result,
+  });
+});
+
+const getSliderProducts = catchAsync(async (req, res) => {
+  const result = await ProductServices.getSliderProductsFromDB();
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Product is retrieved succesfully',
+    data: result,
+  });
+});
+
 export const ProductControllers = {
   getSingleProduct,
   getAllProducts,
@@ -94,4 +126,7 @@ export const ProductControllers = {
   deleteProduct,
   createProduct,
   deleteImage,
+  searchProduct,
+  getLatestProducts,
+  getSliderProducts,
 };

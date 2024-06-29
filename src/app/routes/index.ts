@@ -4,7 +4,7 @@ import { BrandRoutes } from '../modules/brand/brand.route';
 import { CategoryRoutes } from '../modules/category/category.route';
 import { ProductRoutes } from '../modules/product/product.route';
 import { FileRoutes } from '../modules/file/file.route';
-import { UserRoutes } from '../modules/user/user.route';
+import { UserRoutes } from '../modules/User/user.route';
 
 const router = Router();
 

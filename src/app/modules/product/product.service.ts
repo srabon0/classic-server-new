@@ -246,6 +246,56 @@ const deleteImageFromDB = async (productId: string, image: any) => {
   return result;
 };
 
+const searchProductFromDB = async (query: Record<string, unknown>) => {
+  const result = await Product.find({
+    $or: productSearchableFields.map((field) => ({
+      [field]: { $regex: query.searchKey, $options: 'i' },
+    })),
+  })
+    .populate('brand')
+    .populate('category');
+  return { products: result };
+};
+
+const getLatestProductsFromDB = async () => {
+  const result = await Product.find({})
+    .sort({ createdAt: -1 })
+    .limit(5)
+    .populate('brand')
+    .populate('category');
+  return result;
+};
+
+const getSliderProductsFromDB = async () => {
+  const result = await Product.aggregate([
+    { $sample: { size: 10 } }, // Randomly select 10 documents
+    {
+      $lookup: {
+        from: 'brands', // Assuming 'brands' is the collection name
+        localField: 'brand', // Field in the products collection
+        foreignField: '_id', // Field in the brands collection
+        as: 'brand', // Where to put the joined documents
+      },
+    },
+    {
+      $lookup: {
+        from: 'categories', // Assuming 'categories' is the collection name
+        localField: 'category', // Field in the products collection
+        foreignField: '_id', // Field in the categories collection
+        as: 'category', // Where to put the joined documents
+      },
+    },
+    {
+      $unwind: '$brand', // Convert brand array to object
+    },
+    {
+      $unwind: '$category', // Convert category array to object
+    },
+  ]);
+
+  return result;
+};
+
 export const ProductServices = {
   getAllProductsFromDb,
   getSingleProductFromDB,
@@ -253,4 +303,7 @@ export const ProductServices = {
   deleteProductFromDB,
   createProductIntoDB,
   deleteImageFromDB,
+  searchProductFromDB,
+  getLatestProductsFromDB,
+  getSliderProductsFromDB,
 };

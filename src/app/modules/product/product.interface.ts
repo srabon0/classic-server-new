@@ -29,4 +29,5 @@ export type TProduct = {
   price?: number;
   tags?: string[];
   status: TProductStatus;
+  isSliderProduct?: boolean;
 };

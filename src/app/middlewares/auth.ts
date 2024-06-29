@@ -3,17 +3,20 @@ import httpStatus from 'http-status';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import config from '../config';
 import AppError from '../errors/AppError';
-import { TUserRole } from '../modules/user/user.interface';
-import { User } from '../modules/user/user.model';
+
+import { TUserRole } from '../modules/User/user.interface';
+import { User } from '../modules/User/user.model';
 import catchAsync from '../utils/catchAsync';
+import sendResponse from '../utils/sendResponse';
 
 const auth = (...requiredRoles: TUserRole[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const token = req.headers.authorization;
+    const bearer = req.headers.authorization;
+    const token = bearer?.split(' ')[1];
 
     // checking if the token is missing
     if (!token) {
-      throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized!');
+      throw new AppError(httpStatus.NOT_FOUND, 'Token not found');
     }
 
     // checking if the given token is valid
@@ -22,44 +25,27 @@ const auth = (...requiredRoles: TUserRole[]) => {
       config.jwt_access_secret as string,
     ) as JwtPayload;
 
-    const { role, userId, iat } = decoded;
+    const { role, userId } = decoded;
 
     // checking if the user is exist
-    const user = await User.isUserExistsByCustomId(userId);
+    const user = await User.findById({ _id: userId });
 
     if (!user) {
-      throw new AppError(httpStatus.NOT_FOUND, 'This user is not found !');
-    }
-    // checking if the user is already deleted
-
-    const isDeleted = user?.isDeleted;
-
-    if (isDeleted) {
-      throw new AppError(httpStatus.FORBIDDEN, 'This user is deleted !');
-    }
-
-    // checking if the user is blocked
-    const userStatus = user?.status;
-
-    if (userStatus === 'blocked') {
-      throw new AppError(httpStatus.FORBIDDEN, 'This user is blocked ! !');
-    }
-
-    if (
-      user.passwordChangedAt &&
-      User.isJWTIssuedBeforePasswordChanged(
-        user.passwordChangedAt,
-        iat as number,
-      )
-    ) {
-      throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized !');
+      if (requiredRoles && !requiredRoles.includes(role)) {
+        sendResponse(res, {
+          success: false,
+          statusCode: httpStatus.NOT_FOUND,
+          message: 'User not found',
+        });
+      }
     }
 
     if (requiredRoles && !requiredRoles.includes(role)) {
-      throw new AppError(
-        httpStatus.UNAUTHORIZED,
-        'You are not authorized  hi!',
-      );
+      sendResponse(res, {
+        success: false,
+        statusCode: httpStatus.UNAUTHORIZED,
+        message: 'You have no access to this route',
+      });
     }
 
     req.user = decoded as JwtPayload;

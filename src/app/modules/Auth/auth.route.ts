@@ -1,29 +1,29 @@
-import express from 'express';
-import auth from '../../middlewares/auth';
-import validateRequest from '../../middlewares/validateRequest';
-import { USER_ROLE } from './../user/user.constant';
-import { AuthControllers } from './auth.controller';
-import { AuthValidation } from './auth.validation';
+import express from "express";
+
+import validateRequest from "../../middlewares/validateRequest";
+
+import { AuthControllers } from "./auth.controller";
+import { AuthValidation } from "./auth.validation";
+import { userValidation } from "../User/user.validation";
+import { UserController } from "../User/user.controller";
 
 const router = express.Router();
 
 router.post(
-  '/login',
+  "/signup",
+  validateRequest(userValidation.CreateUserValidationSchema),
+  UserController.createUser
+);
+
+router.post(
+  "/login",
   validateRequest(AuthValidation.loginValidationSchema),
-  AuthControllers.loginUser,
+  AuthControllers.loginUser
 );
-
 router.post(
-  '/change-password',
-  auth(USER_ROLE.admin, USER_ROLE.officeAdmin),
-  validateRequest(AuthValidation.changePasswordValidationSchema),
-  AuthControllers.changePassword,
-);
-
-router.post(
-  '/refresh-token',
+  "/refresh-token",
   validateRequest(AuthValidation.refreshTokenValidationSchema),
-  AuthControllers.refreshToken,
+  AuthControllers.refreshToken
 );
 
 export const AuthRoutes = router;
