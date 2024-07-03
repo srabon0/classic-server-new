@@ -71,10 +71,6 @@ const ProductSchema = new Schema(
       enum: Object.values(status),
       default: status.active,
     },
-    isSliderProduct: {
-      type: Boolean,
-      default: false,
-    },
   },
   { timestamps: true },
 );
