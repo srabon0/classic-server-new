@@ -18,12 +18,17 @@ const auth = (...requiredRoles: TUserRole[]) => {
     if (!token) {
       throw new AppError(httpStatus.NOT_FOUND, 'Token not found');
     }
+    let decoded;
+    try {
+      decoded = jwt.verify(
+        token,
+        config.jwt_access_secret as string,
+      ) as JwtPayload;
+    } catch (error) {
+      throw new AppError(httpStatus.UNAUTHORIZED, 'Invalid token');
+    }
 
     // checking if the given token is valid
-    const decoded = jwt.verify(
-      token,
-      config.jwt_access_secret as string,
-    ) as JwtPayload;
 
     const { role, userId } = decoded;
 

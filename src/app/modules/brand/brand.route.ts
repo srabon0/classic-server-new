@@ -5,11 +5,13 @@ import validateRequest from '../../middlewares/validateRequest';
 
 import { BrandControllers } from './brand.controller';
 import { brandValidations } from './brand.validation';
+import auth from '../../middlewares/auth';
 
 const router = express.Router();
 
 router.post(
   '/create-brand',
+  auth('admin'),
   validateRequest(brandValidations.createBrandValidationSchema),
   BrandControllers.createBrand,
 );
@@ -18,11 +20,12 @@ router.get('/:id', BrandControllers.getSingleBrand);
 
 router.put(
   '/:id',
+  auth('admin'),
   validateRequest(brandValidations.updateBrandValidationSchema),
   BrandControllers.updateBrand,
 );
 
-router.delete('/:id', BrandControllers.deleteBrand);
+router.delete('/:id', auth('admin'), BrandControllers.deleteBrand);
 
 router.get(
   '/',
