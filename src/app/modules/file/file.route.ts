@@ -1,6 +1,5 @@
 import express from 'express';
 
-import auth from '../../middlewares/auth';
 import createUploadsFolder from '../../middlewares/createFolder';
 import uploadInExistingFolder from '../../middlewares/uploadInExistingFolder';
 import uploader from '../../middlewares/uploader';
@@ -10,7 +9,6 @@ const router = express.Router();
 
 router.post(
   '/upload-image',
-  auth('admin'),
   createUploadsFolder,
   uploader.array('image', 10),
   UploadController.uploadImage,
@@ -18,7 +16,6 @@ router.post(
 
 router.post(
   '/upload-to-folder/:folder',
-  auth('admin'),
   uploadInExistingFolder,
   uploader.array('image', 10),
   UploadController.uploadImageInSpecificFolder,
