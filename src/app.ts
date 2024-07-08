@@ -16,19 +16,17 @@ const app: Application = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ limit: '30mb', extended: true }));
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      // Allow every origin
-      callback(
-        null,
-        origin || 'https://luxurry-admin-dahsboard.vercel.app' || '*',
-      );
-    },
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true,
-  }),
-);
+app.use(cors());
+// app.use(
+//   cors({
+//     origin: (origin, callback) => {
+//       // Allow every origin
+//       callback(null, origin || 'https://luxurry-admin-dahsboard.vercel.app' || '*' );
+//     },
+//     allowedHeaders: ['Content-Type', 'Authorization'],
+//     credentials: true,
+//   }),
+// );
 
 app.get('/', (req, res) => {
   res.send(
