@@ -18,7 +18,11 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ limit: '30mb', extended: true }));
 app.use(
   cors({
-    origin: '*',
+    origin: (origin, callback) => {
+      // Allow every origin
+      callback(null, origin || '*');
+    },
+    allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
   }),
 );
