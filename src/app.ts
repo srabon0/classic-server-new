@@ -13,13 +13,16 @@ import router from './app/routes';
 const app: Application = express();
 
 //parsers
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://luxurry-admin-dahsboard.vercel.app',
+];
 app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ limit: '30mb', extended: true }));
 app.use(
   cors({
-    origin: '*',
-    allowedHeaders: ['Content Type', 'Authorization'],
+    origin: allowedOrigins,
     credentials: true,
   }),
 );
