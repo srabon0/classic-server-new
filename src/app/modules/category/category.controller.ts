@@ -1,16 +1,28 @@
+import { RequestHandler } from 'express';
 import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
+import Category from './category.model';
 import { CategoryServices } from './category.service';
 
-const getAllCategorys = catchAsync(async (req, res) => {
+const getAllCategorys: RequestHandler = catchAsync(async (req, res) => {
   const result = await CategoryServices.getAllCategorysFromDB(req.query);
+  const totalCounts = await Category.countDocuments();
+  const meta = {
+    totalCounts: totalCounts || 0,
+    totalPages: Math.ceil(totalCounts / Number(req?.query?.limit)) || 1,
+    page: Number(req.query.page || 1),
+    limit: Number(req.query.limit || 10),
+  };
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Categorys are retrieved succesfully',
-    data: result,
+    data: {
+      data: result,
+      meta,
+    },
   });
 });
 const getSingleCategory = catchAsync(async (req, res) => {
