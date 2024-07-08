@@ -20,7 +20,10 @@ app.use(
   cors({
     origin: (origin, callback) => {
       // Allow every origin
-      callback(null, origin || '*');
+      callback(
+        null,
+        origin || 'https://luxurry-admin-dahsboard.vercel.app' || '*',
+      );
     },
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
