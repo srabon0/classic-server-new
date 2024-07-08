@@ -53,7 +53,7 @@ app.use(
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     origin: '*',
-    credentials: true, // If your front-end needs to send cookies to the server
+    // credentials: true, // If your front-end needs to send cookies to the server
   }),
 );
 
