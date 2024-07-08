@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
-import cors from 'cors';
+import cors, { CorsOptions, CorsOptionsDelegate, CorsRequest } from 'cors';
 import express, { Application } from 'express';
 import globalErrorHandler from './app/middlewares/globalErrorhandler';
 import notFound from './app/middlewares/notFound';
@@ -16,12 +16,23 @@ const app: Application = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ limit: '30mb', extended: true }));
-app.use(
-  cors({
-    origin: '*',
-    credentials: true, // If your front-end needs to send cookies to the server
-  }),
-);
+const allowedOrigins = [
+  'https://luxurry-admin-dahsboard.vercel.app/',
+  'http://localhost:3000',
+];
+
+const corsOptions: CorsOptionsDelegate<CorsRequest> = (req, callback) => {
+  let corsOptions: CorsOptions;
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin as string) || !origin) {
+    corsOptions = { origin: true };
+  } else {
+    corsOptions = { origin: false };
+  }
+  callback(null, corsOptions);
+};
+
+app.use(cors(corsOptions));
 
 app.get('/', (req, res) => {
   res.send(
