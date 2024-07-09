@@ -16,6 +16,7 @@ const app: Application = express();
 const allowedOrigins = [
   'http://localhost:3000',
   'https://luxurry-admin-dahsboard.vercel.app',
+  'https://luxurrybd.com',
 ];
 app.use(express.json());
 app.use(cookieParser());
