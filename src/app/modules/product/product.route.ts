@@ -7,7 +7,7 @@ import { productValidations } from './product.validation';
 
 const router = express.Router();
 
-router.get('/', auth('admin'), ProductControllers.getAllProducts);
+router.get('/', ProductControllers.getAllProducts);
 // router.post('/', validateRequest(productValidations.createProductValidationSchema), ProductControllers.createProduct);
 
 router.get('/:id', ProductControllers.getSingleProduct);
